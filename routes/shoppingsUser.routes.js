@@ -41,12 +41,6 @@ router.post(
     createShoping 
     );
 
-/* 
-    //Actualizar un nuevo evento
-router.put('/:id', updateDish );
-
-//Borrar un nuevo evento
-router.delete('/:id', deleteDish ); */
 
 
 module.exports = router 
