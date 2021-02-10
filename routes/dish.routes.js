@@ -35,7 +35,6 @@ router.post(
     [
         
             check('dish_name', 'El nombre es obligatorio').not().isEmpty(),
-            check('section', 'La seccion es obligatoria').not().isEmpty(),
             check('description', 'La seccion es obligatoria').not().isEmpty(),
             check('price', 'El precio es obligatorio').not().isEmpty().isNumeric(),
             check('urlImage', 'La url no debe quedar vacia').not().isEmpty(),
@@ -46,10 +45,10 @@ router.post(
     );
 
 
-    //Actualizar un nuevo evento
+    //Actualizar un nuevo Platillo
 router.put('/:id', updateDish );
 
-//Borrar un nuevo evento
+//Borrar un nuevo platillo
 router.delete('/:id', deleteDish );
 
 

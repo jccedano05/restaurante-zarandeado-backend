@@ -29,8 +29,13 @@ const createDish = async ( req, res = response ) => {
 
     const dish = new Dish( req.body );
 
+
     try {
+
+        dish.user = req.uid;
         
+        
+
         const dishSaved = await dish.save();
 
         res.json({
@@ -58,6 +63,8 @@ const updateDish = async ( req, res = response ) => {
 
     const dishId = req.params.id;
 
+    const uid = req.uid;
+
     try {
 
         const dish = await Dish.findById( dishId );
@@ -69,8 +76,16 @@ const updateDish = async ( req, res = response ) => {
             })
         }
 
+        if( dish.user.toString() !== uid ) {
+            return res.status(401).json({
+                ok: false,
+                msg: 'No tiene privilegio de editar este platillo'
+            })
+        }
+
         const newDish = {
-            ... req.body
+            ... req.body,
+            user: uid
         }
 
 
@@ -78,7 +93,7 @@ const updateDish = async ( req, res = response ) => {
         
         res.json({
             ok: true,
-            evento: dishUpdated
+            dish: dishUpdated
         })
 
     } catch (error) {
@@ -100,6 +115,8 @@ const updateDish = async ( req, res = response ) => {
 const deleteDish = async ( req, res = response ) => {
 
     const dishId = req.params.id;
+    
+    const uid = req.uid;
 
     try {
 
@@ -111,6 +128,15 @@ const deleteDish = async ( req, res = response ) => {
                 msg: 'El platillo no existe'
             })
         }
+
+
+        if( dish.user.toString() !== uid ) {
+            return res.status(401).json({
+                ok: false,
+                msg: 'No tiene privilegio de eliminar este platillo'
+            })
+        }
+
 
         await Dish.findByIdAndDelete( dishId)
         

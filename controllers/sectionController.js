@@ -28,6 +28,8 @@ const createSection = async ( req, res = response ) => {
     const section = new Section( req.body );
 
     try {
+
+        section.user = req.uid;
         
         const sectionSaved = await section.save();
 
@@ -55,6 +57,8 @@ const createSection = async ( req, res = response ) => {
 const updateSection = async ( req, res = response ) => {
 
     const sectionId = req.params.id;
+    
+    const uid = req.uid;
 
     try {
 
@@ -67,8 +71,16 @@ const updateSection = async ( req, res = response ) => {
             })
         }
 
+        if( section.user.toString() !== uid ) {
+            return res.status(401).json({
+                ok: false,
+                msg: 'No tiene privilegio de editar esta seccion'
+            })
+        }
+
         const newSection = {
-            ... req.body
+            ... req.body,
+            user: uid
         }
 
 
@@ -98,6 +110,8 @@ const updateSection = async ( req, res = response ) => {
 const deleteSection = async ( req, res = response ) => {
 
     const sectionId = req.params.id;
+    
+    const uid = req.uid;
 
     try {
 
@@ -109,6 +123,15 @@ const deleteSection = async ( req, res = response ) => {
                 msg: 'El platillo no existe'
             })
         }
+
+
+        if( section.user.toString() !== uid ) {
+            return res.status(401).json({
+                ok: false,
+                msg: 'No tiene privilegio de eliminar esta seccion'
+            })
+        }
+
 
         await Section.findByIdAndDelete( sectionId)
         
