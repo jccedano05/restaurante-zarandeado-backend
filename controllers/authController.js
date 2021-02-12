@@ -38,6 +38,7 @@ const registrarUsuario = async ( req, res = express.response ) => {
         //Encriptar password
         const salt = bcrypt.genSaltSync(10); 
         usuario.password = bcrypt.hashSync( password, salt);
+        
 
         await usuario.save();
 
